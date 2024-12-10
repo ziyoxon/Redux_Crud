@@ -21,11 +21,19 @@ const Users = () => {
   return (
     <div className="p-5">
       <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
-        User List
+        User Information
       </h2>
-      
+
       {users.length === 0 ? (
-        <p className="text-center text-gray-500">No users found.</p>
+        <div className="text-center">
+          <p className="text-gray-500 mb-10">User Empty.</p>
+          <a
+            href="/create-user"
+            className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition"
+          >
+            Add New User
+          </a>
+        </div>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 shadow rounded-lg">
