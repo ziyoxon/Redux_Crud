@@ -1,45 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
 
-const loadState = () => {
-  const savedState = localStorage.getItem("users");
-  return savedState ? JSON.parse(savedState) : [];
-};
-
-const saveState = (state) => {
-  localStorage.setItem("users", JSON.stringify(state));
+const initialState = {
+  users: [], 
+  loggedInUser: null,
 };
 
 const userSlice = createSlice({
-  name: "users",
-  initialState: loadState(),
+  name: "user",
+  initialState,
   reducers: {
     addUser: (state, action) => {
-      const newUser = { id: uuidv4(), ...action.payload };
-      state.push(newUser);
-      saveState(state);
+      state.users.push(action.payload);
     },
-    deleteUser: (state, action) => {
-      const index = state.findIndex((user) => user.id === action.payload);
-      if (index !== -1) {
-        state.splice(index, 1);
-        saveState(state);
-      }
-    },
-    updateUser: (state, action) => {
-      const { id, ...updatedFields } = action.payload;
-      const index = state.findIndex((user) => user.id === id);
-      if (index !== -1) {
-        state[index] = { ...state[index], ...updatedFields };
-        saveState(state);
+
+    signIn: (state, action) => {
+      const { email, password } = action.payload;
+
+      const user = state.users.find(
+        (u) => u.email === email && u.password === password
+      );
+
+      if (user) {
+        state.loggedInUser = user;
+        console.log("User logged in: ", user);
+      } else {
+        alert("Invalid email or password"); 
       }
     },
 
-    getUsers: (state) => {
-      saveState(state);
+    logout: (state) => {
+      state.loggedInUser = null;
+      console.log("User logged out");
     },
   },
 });
 
-export const { addUser, deleteUser, updateUser, getUsers } = userSlice.actions;
+export const { addUser, signIn, logout } = userSlice.actions;
+
 export default userSlice.reducer;
